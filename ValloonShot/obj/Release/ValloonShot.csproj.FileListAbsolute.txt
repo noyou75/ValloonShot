@@ -7,3 +7,15 @@ D:\Workspace\Visual Studio 2015\ValloonShot\ValloonShot\obj\Release\ValloonShot.
 D:\Workspace\Visual Studio 2015\ValloonShot\ValloonShot\obj\Release\ValloonShot.exe
 D:\Workspace\Visual Studio 2015\ValloonShot\ValloonShot\obj\Release\ValloonShot.pdb
 D:\Workspace\Visual Studio 2015\ValloonShot\ValloonShot\obj\Release\ValloonShot.csprojAssemblyReference.cache
+D:\Valloon\Workspace\ValloonShot\ValloonShot\bin\Release\ValloonShot.exe.config
+D:\Valloon\Workspace\ValloonShot\ValloonShot\bin\Release\ValloonShot.exe
+D:\Valloon\Workspace\ValloonShot\ValloonShot\bin\Release\ValloonShot.pdb
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.csproj.AssemblyReference.cache
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.csproj.SuggestedBindingRedirects.cache
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\com.valloon.ValloonShot.Form1.resources
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\com.valloon.ValloonShot.Form2.resources
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\com.valloon.ValloonShot.Properties.Resources.resources
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.csproj.GenerateResource.cache
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.csproj.CoreCompileInputs.cache
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.exe
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.pdb

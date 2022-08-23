@@ -64,6 +64,7 @@ namespace com.valloon.ValloonShot
         public const int MOD_CONTROL = 0x2;
         public const int MOD_ALT = 0x1;
         public const int WM_HOTKEY = 0x312;
+        public const int WM_DESTROY = 0x0002;
 
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
@@ -137,8 +138,46 @@ namespace com.valloon.ValloonShot
             }
         }
 
+        Form2 frm = new Form2();
+        private bool Mode2;
+
+        private void hotkeyShot2()
+        {
+            if (Mode2)
+            {
+                frm.Hide();
+                notifyIcon1.Icon = Resources.valloon;
+                Mode2 = false;
+            }
+            else
+            {
+                frm.Owner = this;
+                frm.Show();
+                notifyIcon1.Icon = Resources.valloon_gray;
+                Mode2 = true;
+            }
+        }
+
         protected override void WndProc(ref Message m)
         {
+            switch (m.Msg)
+            {
+                case WM_HOTKEY:
+                    switch (m.WParam.ToInt32())
+                    {
+                        case 0:
+                            hotkeyShot();
+                            break;
+                        case 1:
+                            hotkeyShot2();
+                            break;
+                    }
+                    break;
+                case WM_DESTROY:
+                    UnregisterHotKey(this.Handle, 0);
+                    UnregisterHotKey(this.Handle, 1);
+                    break;
+            }
             if (m.Msg == WM_HOTKEY && m.WParam == (IntPtr)0)
             {
                 hotkeyShot();
@@ -153,12 +192,15 @@ namespace com.valloon.ValloonShot
             this.Visible = false;
             if (!RegisterHotKey(this.Handle, 0, MOD_WIN + MOD_ALT, hotkey) && !StealthMode)
                 MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 1, MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
+                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             startToolStripMenuItem_Click(sender, e);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             UnregisterHotKey(this.Handle, 0);
+            UnregisterHotKey(this.Handle, 1);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
