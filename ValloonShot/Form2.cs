@@ -44,6 +44,7 @@ namespace com.valloon.ValloonShot
             SetWindowLong(this.Handle, GWL_EXSTYLE, (IntPtr)(GetWindowLong(this.Handle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT));
 
             this.Bounds = Screen.AllScreens.Last().Bounds;
+            this.Height -= 30;
             this.BackColor = Color.Crimson;
             this.TransparencyKey = Color.Crimson;
             this.TopMost = true;

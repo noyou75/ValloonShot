@@ -138,23 +138,41 @@ namespace com.valloon.ValloonShot
             }
         }
 
-        Form2 frm = new Form2();
+        Form2 form2 = new Form2();
         private bool Mode2;
 
         private void hotkeyShot2()
         {
             if (Mode2)
             {
-                frm.Hide();
-                notifyIcon1.Icon = Resources.valloon;
+                form2.Hide();
+                //notifyIcon1.Icon = Resources.valloon;
                 Mode2 = false;
             }
             else
             {
-                frm.Owner = this;
-                frm.Show();
-                notifyIcon1.Icon = Resources.valloon_gray;
+                form2.Owner = this;
+                form2.Show();
+                //notifyIcon1.Icon = Resources.valloon_gray;
                 Mode2 = true;
+            }
+        }
+
+        Form3 form3 = new Form3();
+        private bool Mode3;
+
+        private void hotkeyShot3()
+        {
+            if (Mode3)
+            {
+                form3.Hide();
+                Mode3 = false;
+            }
+            else
+            {
+                form3.Owner = this;
+                form3.Show();
+                Mode3 = true;
             }
         }
 
@@ -168,14 +186,18 @@ namespace com.valloon.ValloonShot
                         case 0:
                             hotkeyShot();
                             break;
-                        case 1:
+                        case 2:
                             hotkeyShot2();
+                            break;
+                        case 3:
+                            hotkeyShot3();
                             break;
                     }
                     break;
                 case WM_DESTROY:
                     UnregisterHotKey(this.Handle, 0);
-                    UnregisterHotKey(this.Handle, 1);
+                    UnregisterHotKey(this.Handle, 2);
+                    UnregisterHotKey(this.Handle, 3);
                     break;
             }
             if (m.Msg == WM_HOTKEY && m.WParam == (IntPtr)0)
@@ -192,7 +214,9 @@ namespace com.valloon.ValloonShot
             this.Visible = false;
             if (!RegisterHotKey(this.Handle, 0, MOD_WIN + MOD_ALT, hotkey) && !StealthMode)
                 MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            if (!RegisterHotKey(this.Handle, 1, MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
+            if (!RegisterHotKey(this.Handle, 2, MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
+                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 3, MOD_WIN + MOD_ALT, (int)Keys.X) && !StealthMode)
                 MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             startToolStripMenuItem_Click(sender, e);
         }
@@ -200,7 +224,8 @@ namespace com.valloon.ValloonShot
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             UnregisterHotKey(this.Handle, 0);
-            UnregisterHotKey(this.Handle, 1);
+            UnregisterHotKey(this.Handle, 2);
+            UnregisterHotKey(this.Handle, 3);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -335,6 +360,8 @@ expect=Program Manager");
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UnregisterHotKey(this.Handle, 0);
+            UnregisterHotKey(this.Handle, 2);
+            UnregisterHotKey(this.Handle, 3);
             this.Close();
         }
 

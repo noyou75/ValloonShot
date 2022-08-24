@@ -19,3 +19,4 @@ D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.csproj.Gene
 D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.csproj.CoreCompileInputs.cache
 D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.exe
 D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\ValloonShot.pdb
+D:\Valloon\Workspace\ValloonShot\ValloonShot\obj\Release\com.valloon.ValloonShot.Form3.resources
