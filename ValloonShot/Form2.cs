@@ -31,17 +31,26 @@ namespace com.valloon.ValloonShot
         //
 
         //هذه الدالة خاصة بمنع تصوير الفورم
-        const uint WDA_MONITOR = 1;
+        const uint WDA_NONE = 0x00000000;
+        const uint WDA_MONITOR = 0x00000001;
+        const uint WDA_EXCLUDEFROMCAPTURE = 0x00000011;
+
         [DllImport("user32.dll")]
         public static extern uint SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
         //
         private void Form2_Load(object sender, EventArgs e)
         {
+            //IntPtr handle = GetForegroundWindow();
+            var handle = this.Handle;
+
             //هذه الدالة خاصة بمنع تصوير الفورم
-            SetWindowDisplayAffinity(this.Handle, WDA_MONITOR);
+            SetWindowDisplayAffinity(handle, WDA_MONITOR);
             //هذه الدوال تختص بجعل الفورم يمكن النقر من خلاله
             this.AllowTransparency = true;
-            SetWindowLong(this.Handle, GWL_EXSTYLE, (IntPtr)(GetWindowLong(this.Handle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT));
+            SetWindowLong(handle, GWL_EXSTYLE, (IntPtr)(GetWindowLong(handle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT));
 
             this.Bounds = Screen.AllScreens.Last().Bounds;
             this.Height -= 30;
