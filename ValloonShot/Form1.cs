@@ -156,6 +156,14 @@ namespace com.valloon.ValloonShot
                 //notifyIcon1.Icon = Resources.valloon_gray;
                 Mode2 = true;
             }
+            if (!Mode3)
+            {
+                Bitmap bitmap = new Bitmap(Form3.R.Width, Form3.R.Height);
+                Graphics graphics = Graphics.FromImage(bitmap);
+                graphics.CopyFromScreen(Form3.R.X, Form3.R.Y, 0, 0, new Size(Form3.R.Width, Form3.R.Height));
+                graphics.Flush();
+                form3.BackgroundImage = bitmap;
+            }
         }
 
         Form3 form3 = new Form3();

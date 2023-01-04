@@ -1,18 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace com.valloon.ValloonShot
 {
     public partial class Form2 : Form
     {
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                // turn on WS_EX_TOOLWINDOW style bit
+                cp.ExStyle |= 0x80;
+                return cp;
+            }
+        }
+
         public Form2()
         {
             InitializeComponent();
@@ -52,7 +58,8 @@ namespace com.valloon.ValloonShot
             this.AllowTransparency = true;
             SetWindowLong(handle, GWL_EXSTYLE, (IntPtr)(GetWindowLong(handle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT));
 
-            this.Bounds = Screen.AllScreens.Last().Bounds;
+            this.Bounds = Screen.AllScreens.First().Bounds;
+            //this.Bounds = Screen.AllScreens.Last().Bounds;
             this.Height -= 30;
             this.BackColor = Color.Crimson;
             this.TransparencyKey = Color.Crimson;
