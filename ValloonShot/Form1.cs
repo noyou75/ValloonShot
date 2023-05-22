@@ -22,7 +22,7 @@ namespace com.valloon.ValloonShot
         private String extension = @"png";
         private readonly String path = Application.StartupPath + @"\";
         private readonly String path2 = Application.StartupPath + @"\_shot\";
-        private Boolean StealthMode = true;
+        private Boolean StealthMode = false;
         private int interval1 = 10;
         private int interval2 = 1799;
         private readonly int hotkey = (int)Keys.Space;
@@ -67,22 +67,33 @@ namespace com.valloon.ValloonShot
         public const int WM_DESTROY = 0x0002;
 
         [DllImport("user32.dll")]
+        public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint ProcessId);
+
+        [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
+        private string GetWindowTitle(IntPtr handle)
+        {
+            try
+            {
+                const int nChars = 256;
+                StringBuilder Buff = new StringBuilder(nChars);
+                if (GetWindowText(handle, Buff, nChars) > 0)
+                {
+                    return Buff.ToString();
+                }
+            }
+            catch { }
+            return null;
+        }
+
         private string GetActiveWindowTitle()
         {
-            const int nChars = 256;
-            StringBuilder Buff = new StringBuilder(nChars);
             IntPtr handle = GetForegroundWindow();
-
-            if (GetWindowText(handle, Buff, nChars) > 0)
-            {
-                return Buff.ToString();
-            }
-            return null;
+            return GetWindowTitle(handle);
         }
 
         private Boolean ExceptThis(String SubActiveWindowTitle)
@@ -98,38 +109,41 @@ namespace com.valloon.ValloonShot
             return false;
         }
 
-        private void ScreenShot(String path, String filename)
+        private void ScreenShot(string path, string filename, string extension = "png")
         {
             DirectoryInfo dir = new DirectoryInfo(path);
             if (!dir.Exists) dir.Create();
             if (!path.EndsWith(@"\")) path += @"\";
-            filename = path + filename;
-            Size size = SystemInformation.PrimaryMonitorSize;
-            Bitmap bitmap = new Bitmap(size.Width, size.Height);
-            Graphics graphics = Graphics.FromImage(bitmap);
-            graphics.CopyFromScreen(0, 0, 0, 0, size);
-            graphics.Flush();
-            bitmap.Save(filename, ImageFormat.Png);
-            bitmap.Dispose();
-            graphics.Dispose();
+            int screenIndex = 0;
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                string fullname;
+                if (screenIndex == 0)
+                    fullname = path + filename + "." + extension;
+                else
+                    fullname = path + filename + $" ({screenIndex + 1})." + extension;
+                var bitmap = new Bitmap(screen.Bounds.Width, screen.Bounds.Height, PixelFormat.Format32bppArgb);
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.CopyFromScreen(screen.Bounds.X, screen.Bounds.Y, 0, 0, screen.Bounds.Size, CopyPixelOperation.SourceCopy);
+                graphics.Flush();
+                bitmap.Save(fullname, ImageFormat.Png);
+                bitmap.Dispose();
+                graphics.Dispose();
+                screenIndex++;
+            }
         }
 
         private void hotkeyShot()
         {
             DateTime time = DateTime.Now;
             String filename = time.ToString("yyyy-MM-dd  HH.mm.ss");
+            notifyIcon1.Visible = true;
             try
             {
                 String activeWindowTitle = GetActiveWindowTitle();
                 if (activeWindowTitle != null)
-                {
-                    filename += "  " + CorrectFileNames(activeWindowTitle) + "." + extension;
-                }
-                else
-                {
-                    filename += "." + extension;
-                }
-                ScreenShot(path2, filename);
+                    filename += "  " + CorrectFileNames(activeWindowTitle);
+                ScreenShot(path2, filename, extension);
                 notifyIcon1.ShowBalloonTip(0, "Success !\r\n", filename, ToolTipIcon.Info);
             }
             catch (Exception ex)
@@ -184,6 +198,18 @@ namespace com.valloon.ValloonShot
             }
         }
 
+        //[DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //private static extern bool IsWow64Process([In] IntPtr process, [Out] out bool wow64Process);
+
+        //[DllImport("user32.dll", SetLastError = true)]
+        //private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        //public static IntPtr FindExcelErrorPopup(string title)
+        //{
+        //    return FindWindow(null, title);
+        //}
+
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
@@ -200,12 +226,104 @@ namespace com.valloon.ValloonShot
                         case 3:
                             hotkeyShot3();
                             break;
+                        case 4:
+                            try
+                            {
+                                IntPtr handle = GetForegroundWindow();
+                                GetWindowThreadProcessId(handle, out uint pid);
+                                string title = GetWindowTitle(handle);
+                                if (MessageBoc.Show(pid.ToString(), title) == DialogResult.OK)
+                                {
+                                    var process = Process.Start(new ProcessStartInfo()
+                                    {
+                                        WindowStyle = ProcessWindowStyle.Hidden,
+                                        CreateNoWindow = true,
+                                        UseShellExecute = false,
+                                        RedirectStandardError = true,
+                                        RedirectStandardOutput = true,
+                                        FileName = "cmd.exe",
+                                        Arguments = $"/c Invisiwind.exe -h {pid}",
+                                        WorkingDirectory = @"C:\Program Files (x86)\VMware\VMware Workstation\bin"
+                                    });
+                                    StringBuilder output = new StringBuilder();
+                                    process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
+                                        output.Append(">>" + e.Data);
+                                    process.BeginOutputReadLine();
+
+                                    process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
+                                        output.Append(">>" + e.Data);
+                                    process.BeginErrorReadLine();
+
+                                    process.WaitForExit();
+
+                                    output.Append("ExitCode: " + process.ExitCode);
+                                    process.Close();
+
+                                    var result = output.ToString();
+                                    if (!result.Contains("Success!"))
+                                        MessageBoc.Show(pid.ToString(), result);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBoc.Show(ex.Message, "Error");
+                            }
+                            break;
+                        case 5:
+                            try
+                            {
+                                IntPtr handle = GetForegroundWindow();
+                                GetWindowThreadProcessId(handle, out uint pid);
+                                string title = GetWindowTitle(handle);
+                                if (MessageBoc.Show(pid.ToString(), title) == DialogResult.OK)
+                                {
+                                    var process = Process.Start(new ProcessStartInfo()
+                                    {
+                                        WindowStyle = ProcessWindowStyle.Hidden,
+                                        CreateNoWindow = true,
+                                        UseShellExecute = false,
+                                        RedirectStandardError = true,
+                                        RedirectStandardOutput = true,
+                                        FileName = "cmd.exe",
+                                        Arguments = $"/c Invisiwind.exe -u {pid}",
+                                        WorkingDirectory = @"C:\Program Files (x86)\VMware\VMware Workstation\bin"
+                                    });
+                                    StringBuilder output = new StringBuilder();
+                                    process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
+                                        output.Append(">>" + e.Data);
+                                    process.BeginOutputReadLine();
+
+                                    process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
+                                        output.Append(">>" + e.Data);
+                                    process.BeginErrorReadLine();
+
+                                    process.WaitForExit();
+
+                                    output.Append("ExitCode: " + process.ExitCode);
+                                    process.Close();
+
+                                    var result = output.ToString();
+                                    if (!result.Contains("Success!"))
+                                        MessageBoc.Show(pid.ToString(), result);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBoc.Show(ex.Message, "Error");
+                            }
+                            break;
+                        case 9:
+                            notifyIcon1.Visible = !notifyIcon1.Visible;
+                            break;
                     }
                     break;
                 case WM_DESTROY:
                     UnregisterHotKey(this.Handle, 0);
                     UnregisterHotKey(this.Handle, 2);
                     UnregisterHotKey(this.Handle, 3);
+                    UnregisterHotKey(this.Handle, 4);
+                    UnregisterHotKey(this.Handle, 5);
+                    UnregisterHotKey(this.Handle, 9);
                     break;
             }
             if (m.Msg == WM_HOTKEY && m.WParam == (IntPtr)0)
@@ -222,9 +340,15 @@ namespace com.valloon.ValloonShot
             this.Visible = false;
             if (!RegisterHotKey(this.Handle, 0, MOD_WIN + MOD_ALT, hotkey) && !StealthMode)
                 MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            if (!RegisterHotKey(this.Handle, 2, MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
+            if (!RegisterHotKey(this.Handle, 4, MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
                 MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            if (!RegisterHotKey(this.Handle, 3, MOD_WIN + MOD_ALT, (int)Keys.X) && !StealthMode)
+            if (!RegisterHotKey(this.Handle, 5, MOD_WIN + MOD_ALT, (int)Keys.X) && !StealthMode)
+                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 2, MOD_WIN + MOD_ALT, (int)Keys.C) && !StealthMode)
+                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 3, MOD_WIN + MOD_ALT, (int)Keys.V) && !StealthMode)
+                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 9, MOD_WIN + MOD_CONTROL + MOD_SHIFT, (int)Keys.Q))
                 MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             startToolStripMenuItem_Click(sender, e);
         }
@@ -234,6 +358,9 @@ namespace com.valloon.ValloonShot
             UnregisterHotKey(this.Handle, 0);
             UnregisterHotKey(this.Handle, 2);
             UnregisterHotKey(this.Handle, 3);
+            UnregisterHotKey(this.Handle, 4);
+            UnregisterHotKey(this.Handle, 5);
+            UnregisterHotKey(this.Handle, 9);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -245,21 +372,14 @@ namespace com.valloon.ValloonShot
                 String activeWindowTitle = GetActiveWindowTitle();
                 if (ExceptThis(activeWindowTitle)) return;
                 if (activeWindowTitle != null)
-                {
-                    filename += "  " + CorrectFileNames(activeWindowTitle) + "." + extension;
-                }
-                else
-                {
-                    filename += "." + extension;
-                }
-                ScreenShot(path + time.ToString("yyyy-MM-dd"), filename);
+                    filename += "  " + CorrectFileNames(activeWindowTitle);
+                ScreenShot(path + time.ToString("yyyy-MM-dd"), filename, extension);
             }
             catch (Exception ex)
             {
+                notifyIcon1.Visible = true;
                 notifyIcon1.ShowBalloonTip(0, "Save failed !\r\n" + filename, ex.Message, ToolTipIcon.Error);
-                throw ex;
             }
-
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -271,17 +391,12 @@ namespace com.valloon.ValloonShot
                 String activeWindowTitle = GetActiveWindowTitle();
                 if (ExceptThis(activeWindowTitle)) return;
                 if (activeWindowTitle != null)
-                {
-                    filename += "  " + CorrectFileNames(activeWindowTitle) + "." + extension;
-                }
-                else
-                {
-                    filename += "." + extension;
-                }
-                ScreenShot(path + time.ToString("yyyy"), filename);
+                    filename += "  " + CorrectFileNames(activeWindowTitle);
+                ScreenShot(path + time.ToString("yyyy"), filename, extension);
             }
             catch (Exception ex)
             {
+                notifyIcon1.Visible = true;
                 notifyIcon1.ShowBalloonTip(0, "Save failed !\r\n" + filename, ex.Message, ToolTipIcon.Error);
             }
         }
@@ -341,7 +456,9 @@ expect=Program Manager");
                 if (!StealthMode)
                     MessageBox.Show("Read config failed. " + ex.Message, "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            notifyIcon1.Visible = true;
             notifyIcon1.ShowBalloonTip(0, "I am alive !", "Interval1=" + interval1 + ", Interval2=" + interval2, ToolTipIcon.Info);
+            notifyIcon1.Visible = false;
             timer1.Interval = 1000 * interval1;
             timer2.Interval = 1000 * interval2;
             timer1.Enabled = true;
@@ -370,6 +487,8 @@ expect=Program Manager");
             UnregisterHotKey(this.Handle, 0);
             UnregisterHotKey(this.Handle, 2);
             UnregisterHotKey(this.Handle, 3);
+            UnregisterHotKey(this.Handle, 4);
+            UnregisterHotKey(this.Handle, 5);
             this.Close();
         }
 
