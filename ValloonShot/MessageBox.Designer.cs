@@ -1,6 +1,6 @@
 ﻿namespace com.valloon.ValloonShot
 {
-    partial class MessageBoc
+    partial class MessageBox
     {
         /// <summary>
         /// Required designer variable.
@@ -54,16 +54,16 @@
             this.button_Cancel.UseVisualStyleBackColor = true;
             this.button_Cancel.Click += new System.EventHandler(this.button_Cancel_Click);
             // 
-            // textBox1
+            // textBox_Description
             // 
             this.textBox_Description.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_Description.Location = new System.Drawing.Point(12, 8);
-            this.textBox_Description.Name = "textBox1";
+            this.textBox_Description.Name = "textBox_Description";
             this.textBox_Description.ReadOnly = true;
             this.textBox_Description.Size = new System.Drawing.Size(175, 13);
             this.textBox_Description.TabIndex = 3;
             // 
-            // MessageBoc
+            // MessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -73,11 +73,12 @@
             this.Controls.Add(this.button_Cancel);
             this.Controls.Add(this.button_OK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "MessageBoc";
+            this.Name = "MessageBox";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MessageBoc";
-            this.Load += new System.EventHandler(this.MessageBoc_Load);
+            this.Text = "MessageBox";
+            this.Load += new System.EventHandler(this.MessageBox_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

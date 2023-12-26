@@ -11,14 +11,14 @@ using System.Windows.Forms;
 
 namespace com.valloon.ValloonShot
 {
-    public partial class MessageBoc : Form
+    public partial class MessageBox : Form
     {
-        public MessageBoc()
+        public MessageBox()
         {
             InitializeComponent();
         }
 
-        public MessageBoc(string title, string description)
+        public MessageBox(string title, string description)
         {
             InitializeComponent();
 
@@ -29,7 +29,7 @@ namespace com.valloon.ValloonShot
         public static DialogResult Show(string title, string description)
         {
             // using construct ensures the resources are freed when form is closed
-            using (var form = new MessageBoc(title, description))
+            using (var form = new MessageBox(title, description))
             {
                 var result = form.ShowDialog();
                 form.Activate();
@@ -64,7 +64,7 @@ namespace com.valloon.ValloonShot
             _ = SetWindowDisplayAffinity(handle, WDA_EXCLUDEFROMCAPTURE);
         }
 
-        private void MessageBoc_Load(object sender, EventArgs e)
+        private void MessageBox_Load(object sender, EventArgs e)
         {
             Verify(this.Handle);
         }

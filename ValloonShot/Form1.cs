@@ -232,7 +232,7 @@ namespace com.valloon.ValloonShot
                                 IntPtr handle = GetForegroundWindow();
                                 GetWindowThreadProcessId(handle, out uint pid);
                                 string title = GetWindowTitle(handle);
-                                if (MessageBoc.Show(pid.ToString(), title) == DialogResult.OK)
+                                if (MessageBox.Show(pid.ToString(), title) == DialogResult.OK)
                                 {
                                     var process = Process.Start(new ProcessStartInfo()
                                     {
@@ -261,12 +261,12 @@ namespace com.valloon.ValloonShot
 
                                     var result = output.ToString();
                                     if (!result.Contains("Success!"))
-                                        MessageBoc.Show(pid.ToString(), result);
+                                        MessageBox.Show(pid.ToString(), result);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                MessageBoc.Show(ex.Message, "Error");
+                                MessageBox.Show(ex.Message, "Error");
                             }
                             break;
                         case 5:
@@ -275,7 +275,7 @@ namespace com.valloon.ValloonShot
                                 IntPtr handle = GetForegroundWindow();
                                 GetWindowThreadProcessId(handle, out uint pid);
                                 string title = GetWindowTitle(handle);
-                                if (MessageBoc.Show(pid.ToString(), title) == DialogResult.OK)
+                                if (MessageBox.Show(pid.ToString(), title) == DialogResult.OK)
                                 {
                                     var process = Process.Start(new ProcessStartInfo()
                                     {
@@ -304,12 +304,12 @@ namespace com.valloon.ValloonShot
 
                                     var result = output.ToString();
                                     if (!result.Contains("Success!"))
-                                        MessageBoc.Show(pid.ToString(), result);
+                                        MessageBox.Show(pid.ToString(), result);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                MessageBoc.Show(ex.Message, "Error");
+                                MessageBox.Show(ex.Message, "Error");
                             }
                             break;
                         case 9:
@@ -339,17 +339,17 @@ namespace com.valloon.ValloonShot
             this.Hide();
             this.Visible = false;
             if (!RegisterHotKey(this.Handle, 0, MOD_WIN + MOD_ALT, hotkey) && !StealthMode)
-                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 4, MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
-                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 5, MOD_WIN + MOD_ALT, (int)Keys.X) && !StealthMode)
-                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 2, MOD_WIN + MOD_ALT, (int)Keys.C) && !StealthMode)
-                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 3, MOD_WIN + MOD_ALT, (int)Keys.V) && !StealthMode)
-                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 9, MOD_WIN + MOD_CONTROL + MOD_SHIFT, (int)Keys.Q))
-                MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             startToolStripMenuItem_Click(sender, e);
         }
 
@@ -454,7 +454,7 @@ expect=Program Manager");
             catch (Exception ex)
             {
                 if (!StealthMode)
-                    MessageBox.Show("Read config failed. " + ex.Message, "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    System.Windows.Forms.MessageBox.Show("Read config failed. " + ex.Message, "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             notifyIcon1.Visible = true;
             notifyIcon1.ShowBalloonTip(0, "I am alive !", "Interval1=" + interval1 + ", Interval2=" + interval2, ToolTipIcon.Info);

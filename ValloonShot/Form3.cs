@@ -34,10 +34,16 @@ namespace com.valloon.ValloonShot
             R = new Rectangle
             {
                 X = screenBounds.X,
-                Y = screenBounds.Y + screenBounds.Height - 47,
-                Width = screenBounds.Width - 82,
-                Height = 47,
+                Y = screenBounds.Y + screenBounds.Height - 30,
+                Width = screenBounds.Width - 40,
+                Height = 30,
             };
+			//{
+            //    X = screenBounds.X,
+            //    Y = screenBounds.Y + screenBounds.Height - 47,
+            //    Width = screenBounds.Width - 82,
+            //    Height = 47,
+            //};
             //{
             //    X = screenBounds.X + 74,
             //    Y = screenBounds.Y + screenBounds.Height - 30,
