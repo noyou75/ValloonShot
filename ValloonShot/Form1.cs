@@ -75,6 +75,9 @@ namespace com.valloon.ValloonShot
         [DllImport("user32.dll")]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
+        [DllImport("user32.dll")]
+        static extern int SetWindowText(IntPtr hWnd, string text);
+
         private string GetWindowTitle(IntPtr handle)
         {
             try
@@ -312,6 +315,17 @@ namespace com.valloon.ValloonShot
                                 MessageBox.Show(ex.Message, "Error");
                             }
                             break;
+                        case 6:
+                            try
+                            {
+                                IntPtr handle = GetForegroundWindow();
+                                SetWindowText(handle, "");
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message, "Error");
+                            }
+                            break;
                         case 9:
                             notifyIcon1.Visible = !notifyIcon1.Visible;
                             break;
@@ -323,6 +337,7 @@ namespace com.valloon.ValloonShot
                     UnregisterHotKey(this.Handle, 3);
                     UnregisterHotKey(this.Handle, 4);
                     UnregisterHotKey(this.Handle, 5);
+                    UnregisterHotKey(this.Handle, 6);
                     UnregisterHotKey(this.Handle, 9);
                     break;
             }
@@ -348,6 +363,8 @@ namespace com.valloon.ValloonShot
                 System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 3, MOD_WIN + MOD_ALT, (int)Keys.V) && !StealthMode)
                 System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 6, MOD_CONTROL + MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 9, MOD_WIN + MOD_CONTROL + MOD_SHIFT, (int)Keys.Q))
                 System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             startToolStripMenuItem_Click(sender, e);
@@ -360,6 +377,7 @@ namespace com.valloon.ValloonShot
             UnregisterHotKey(this.Handle, 3);
             UnregisterHotKey(this.Handle, 4);
             UnregisterHotKey(this.Handle, 5);
+            UnregisterHotKey(this.Handle, 6);
             UnregisterHotKey(this.Handle, 9);
         }
 
@@ -429,7 +447,7 @@ namespace com.valloon.ValloonShot
                         }
                         else if (var[0] == "expect")
                         {
-                            exceptWindowTitles = var[1].Trim().Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                            exceptWindowTitles = var[1].Trim().Split(new String[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
                         }
                         else if (var[0] == "stealth")
                         {
@@ -489,6 +507,7 @@ expect=Program Manager");
             UnregisterHotKey(this.Handle, 3);
             UnregisterHotKey(this.Handle, 4);
             UnregisterHotKey(this.Handle, 5);
+            UnregisterHotKey(this.Handle, 6);
             this.Close();
         }
 

@@ -60,7 +60,7 @@ namespace com.valloon.ValloonShot
 
             //this.Bounds = Screen.AllScreens.First().Bounds;
             this.Bounds = Screen.AllScreens.Last().Bounds;
-            this.Height -= 47;
+            this.Height -= 30;
             this.BackColor = Color.Crimson;
             this.TransparencyKey = Color.Crimson;
             this.TopMost = true;
