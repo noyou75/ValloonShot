@@ -78,6 +78,24 @@ namespace com.valloon.ValloonShot
         [DllImport("user32.dll")]
         static extern int SetWindowText(IntPtr hWnd, string text);
 
+        [DllImport("User32.dll")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        [DllImport("User32.dll")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private const int SW_HIDE = 0x00;
+        private const int SW_SHOW = 0x05;
+        private const int SW_RESTORE = 0x09;
+        private const int WS_EX_APPWINDOW = 0x40000;
+        private const int GWL_EX_STYLE = -0x14;
+        private const int WS_EX_TOOLWINDOW = 0x0080;
+
         private string GetWindowTitle(IntPtr handle)
         {
             try
@@ -213,6 +231,8 @@ namespace com.valloon.ValloonShot
         //    return FindWindow(null, title);
         //}
 
+        IntPtr LastHandle = IntPtr.Zero;
+
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
@@ -320,6 +340,43 @@ namespace com.valloon.ValloonShot
                             {
                                 IntPtr handle = GetForegroundWindow();
                                 SetWindowText(handle, "");
+                                LastHandle = handle;
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message, "Error");
+                            }
+                            try
+                            {
+                                IntPtr handle = GetForegroundWindow();
+                                ShowWindow(Handle, SW_HIDE);
+                                SetWindowLong(handle, GWL_EX_STYLE, (GetWindowLong(handle, GWL_EX_STYLE) | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW);
+                                ShowWindow(Handle, SW_SHOW);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message, "Error");
+                            }
+                            break;
+                        case 7:
+                            if (LastHandle != IntPtr.Zero)
+                            {
+                                try
+                                {
+                                    ShowWindow(LastHandle, SW_RESTORE);
+                                    SetForegroundWindow(LastHandle);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message, "Error");
+                                }
+                            }
+                            break;
+                        case 8:
+                            try
+                            {
+                                IntPtr handle = GetForegroundWindow();
+                                SetWindowText(handle, "");
                             }
                             catch (Exception ex)
                             {
@@ -338,6 +395,8 @@ namespace com.valloon.ValloonShot
                     UnregisterHotKey(this.Handle, 4);
                     UnregisterHotKey(this.Handle, 5);
                     UnregisterHotKey(this.Handle, 6);
+                    UnregisterHotKey(this.Handle, 7);
+                    UnregisterHotKey(this.Handle, 8);
                     UnregisterHotKey(this.Handle, 9);
                     break;
             }
@@ -365,6 +424,10 @@ namespace com.valloon.ValloonShot
                 System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 6, MOD_CONTROL + MOD_WIN + MOD_ALT, (int)Keys.Z) && !StealthMode)
                 System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 7, MOD_CONTROL + MOD_WIN + MOD_ALT, (int)Keys.X) && !StealthMode)
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!RegisterHotKey(this.Handle, 8, MOD_CONTROL + MOD_WIN + MOD_ALT, (int)Keys.C) && !StealthMode)
+                System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             if (!RegisterHotKey(this.Handle, 9, MOD_WIN + MOD_CONTROL + MOD_SHIFT, (int)Keys.Q))
                 System.Windows.Forms.MessageBox.Show("Set hotkey failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             startToolStripMenuItem_Click(sender, e);
@@ -378,6 +441,8 @@ namespace com.valloon.ValloonShot
             UnregisterHotKey(this.Handle, 4);
             UnregisterHotKey(this.Handle, 5);
             UnregisterHotKey(this.Handle, 6);
+            UnregisterHotKey(this.Handle, 7);
+            UnregisterHotKey(this.Handle, 8);
             UnregisterHotKey(this.Handle, 9);
         }
 
@@ -508,6 +573,9 @@ expect=Program Manager");
             UnregisterHotKey(this.Handle, 4);
             UnregisterHotKey(this.Handle, 5);
             UnregisterHotKey(this.Handle, 6);
+            UnregisterHotKey(this.Handle, 7);
+            UnregisterHotKey(this.Handle, 8);
+            UnregisterHotKey(this.Handle, 9);
             this.Close();
         }
 
