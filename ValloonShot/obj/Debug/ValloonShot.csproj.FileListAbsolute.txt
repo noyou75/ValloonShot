@@ -1,0 +1,11 @@
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\bin\Debug\ValloonShot.exe.config
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\bin\Debug\ValloonShot.exe
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.AssemblyReference.cache
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Form1.resources
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Form2.resources
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Form3.resources
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.MessageBox.resources
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Properties.Resources.resources
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.GenerateResource.cache
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.CoreCompileInputs.cache
+C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\ValloonShot.exe

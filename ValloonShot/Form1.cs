@@ -114,6 +114,7 @@ namespace com.valloon.ValloonShot
         private string GetActiveWindowTitle()
         {
             IntPtr handle = GetForegroundWindow();
+            if (handle == IntPtr.Zero) return null;
             return GetWindowTitle(handle);
         }
 
@@ -135,6 +136,7 @@ namespace com.valloon.ValloonShot
             DirectoryInfo dir = new DirectoryInfo(path);
             if (!dir.Exists) dir.Create();
             if (!path.EndsWith(@"\")) path += @"\";
+            if (filename.Length > 200) filename = filename.Substring(0, 200);
             int screenIndex = 0;
             foreach (Screen screen in Screen.AllScreens)
             {
@@ -143,13 +145,15 @@ namespace com.valloon.ValloonShot
                     fullname = path + filename + "." + extension;
                 else
                     fullname = path + filename + $" ({screenIndex + 1})." + extension;
-                var bitmap = new Bitmap(screen.Bounds.Width, screen.Bounds.Height, PixelFormat.Format32bppArgb);
-                var graphics = Graphics.FromImage(bitmap);
-                graphics.CopyFromScreen(screen.Bounds.X, screen.Bounds.Y, 0, 0, screen.Bounds.Size, CopyPixelOperation.SourceCopy);
-                graphics.Flush();
-                bitmap.Save(fullname, ImageFormat.Png);
-                bitmap.Dispose();
-                graphics.Dispose();
+                using (var bitmap = new Bitmap(screen.Bounds.Width, screen.Bounds.Height, PixelFormat.Format32bppArgb))
+                {
+                    using (var graphics = Graphics.FromImage(bitmap))
+                    {
+                        graphics.CopyFromScreen(screen.Bounds.X, screen.Bounds.Y, 0, 0, screen.Bounds.Size, CopyPixelOperation.SourceCopy);
+                        graphics.Flush();
+                        bitmap.Save(fullname, ImageFormat.Png);
+                    }
+                }
                 screenIndex++;
             }
         }
@@ -170,6 +174,7 @@ namespace com.valloon.ValloonShot
             catch (Exception ex)
             {
                 notifyIcon1.ShowBalloonTip(0, "Save failed !\r\n" + filename, ex.Message, ToolTipIcon.Error);
+                File.AppendAllText("error.log", $"{filename}\r\n{ex}\r\n\r\n");
             }
         }
 
@@ -255,7 +260,7 @@ namespace com.valloon.ValloonShot
                                 IntPtr handle = GetForegroundWindow();
                                 GetWindowThreadProcessId(handle, out uint pid);
                                 string title = GetWindowTitle(handle);
-                                if (MessageBox.Show(pid.ToString(), title) == DialogResult.OK)
+                                //if (MessageBox.Show(pid.ToString(), title) == DialogResult.OK)
                                 {
                                     var process = Process.Start(new ProcessStartInfo()
                                     {
@@ -286,6 +291,27 @@ namespace com.valloon.ValloonShot
                                     if (!result.Contains("Success!"))
                                         MessageBox.Show(pid.ToString(), result);
                                 }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message, "Error");
+                            }
+                            try
+                            {
+                                IntPtr handle = GetForegroundWindow();
+                                SetWindowText(handle, "");
+                                LastHandle = handle;
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message, "Error");
+                            }
+                            try
+                            {
+                                IntPtr handle = GetForegroundWindow();
+                                // ShowWindow(handle, SW_HIDE);
+                                SetWindowLong(handle, GWL_EX_STYLE, (GetWindowLong(handle, GWL_EX_STYLE) | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW);
+                                // ShowWindow(handle, SW_SHOW);
                             }
                             catch (Exception ex)
                             {
@@ -349,9 +375,9 @@ namespace com.valloon.ValloonShot
                             try
                             {
                                 IntPtr handle = GetForegroundWindow();
-                                ShowWindow(Handle, SW_HIDE);
+                                // ShowWindow(handle, SW_HIDE);
                                 SetWindowLong(handle, GWL_EX_STYLE, (GetWindowLong(handle, GWL_EX_STYLE) | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW);
-                                ShowWindow(Handle, SW_SHOW);
+                                // ShowWindow(handle, SW_SHOW);
                             }
                             catch (Exception ex)
                             {
@@ -462,6 +488,7 @@ namespace com.valloon.ValloonShot
             {
                 notifyIcon1.Visible = true;
                 notifyIcon1.ShowBalloonTip(0, "Save failed !\r\n" + filename, ex.Message, ToolTipIcon.Error);
+                File.AppendAllText("error.log", $"{filename}\r\n{ex}\r\n\r\n");
             }
         }
 
@@ -481,6 +508,7 @@ namespace com.valloon.ValloonShot
             {
                 notifyIcon1.Visible = true;
                 notifyIcon1.ShowBalloonTip(0, "Save failed !\r\n" + filename, ex.Message, ToolTipIcon.Error);
+                File.AppendAllText("error.log", $"{filename}\r\n{ex}\r\n\r\n");
             }
         }
 
