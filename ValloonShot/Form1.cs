@@ -84,17 +84,17 @@ namespace com.valloon.ValloonShot
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        private const int SW_HIDE = 0x00;
-        private const int SW_SHOW = 0x05;
-        private const int SW_RESTORE = 0x09;
-        private const int WS_EX_APPWINDOW = 0x40000;
-        private const int GWL_EX_STYLE = -0x14;
-        private const int WS_EX_TOOLWINDOW = 0x0080;
+        public const int SW_HIDE = 0x00;
+        public const int SW_SHOW = 0x05;
+        public const int SW_RESTORE = 0x09;
+        public const int WS_EX_APPWINDOW = 0x40000;
+        public const int GWL_EX_STYLE = -0x14;
+        public const int WS_EX_TOOLWINDOW = 0x0080;
 
         private string GetWindowTitle(IntPtr handle)
         {

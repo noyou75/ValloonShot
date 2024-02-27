@@ -9,3 +9,14 @@ C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\com.valloon.Valloo
 C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.GenerateResource.cache
 C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.CoreCompileInputs.cache
 C:\Users\W\Documents\GitHub\ValloonShot\ValloonShot\obj\Debug\ValloonShot.exe
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\bin\Debug\ValloonShot.exe.config
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\bin\Debug\ValloonShot.exe
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.AssemblyReference.cache
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Form1.resources
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Form2.resources
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Form3.resources
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.MessageBox.resources
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\com.valloon.ValloonShot.Properties.Resources.resources
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.GenerateResource.cache
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\ValloonShot.csproj.CoreCompileInputs.cache
+E:\Valloon\Workspace\VisualStudio2022\ValloonShot\ValloonShot\obj\Debug\ValloonShot.exe
